@@ -8,8 +8,8 @@ const generateLineLoginUrl = () => {
   // ✅ CSRF 방지를 위한 랜덤 state 생성
   const state = crypto.randomUUID();
 
-  // ✅ sessionStorage에 state 저장 (localStorage 대신 사용)
-  sessionStorage.setItem('line_login_state', state);
+  // ✅ localStorage에 state 저장
+  localStorage.setItem('line_login_state', state);
 
   // LINE OAuth URL
   const lineAuthUrl = new URL('https://access.line.me/oauth2/v2.1/authorize');

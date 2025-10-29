@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useLineCallback } from '@/hooks/use-api';
 import { useToast } from '@/hooks/use-toast';
@@ -11,8 +11,12 @@ export default function LineCallback() {
 
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [error, setError] = useState<string>('');
+  const hasExecuted = useRef(false);
 
   useEffect(() => {
+    // 이미 실행되었으면 리턴 (무한 루프 방지)
+    if (hasExecuted.current) return;
+    hasExecuted.current = true;
     const handleCallback = async () => {
       // URL에서 code와 state 파라미터 추출
       const code = searchParams.get('code');
@@ -35,8 +39,8 @@ export default function LineCallback() {
         return;
       }
 
-      // ✅ State 검증 (CSRF 방지) - sessionStorage 사용
-      const savedState = sessionStorage.getItem('line_login_state');
+      // ✅ State 검증 (CSRF 방지) - localStorage 사용
+      const savedState = localStorage.getItem('line_login_state');
       console.log('- Saved State:', savedState);
       console.log('- State Match:', savedState === state);
 
@@ -53,7 +57,7 @@ export default function LineCallback() {
       }
 
       // ✅ State 사용 후 삭제
-      sessionStorage.removeItem('line_login_state');
+      localStorage.removeItem('line_login_state');
 
       try {
         // 🚀 백엔드 API 호출 - Authorization Code 전송
@@ -62,6 +66,10 @@ export default function LineCallback() {
           state: state,
           redirectUri: import.meta.env.VITE_LINE_REDIRECT_URI,
         });
+
+        console.log('✅ Login Success:');
+        console.log('- Response:', response);
+        console.log('- Token saved:', localStorage.getItem('auth_token') ? 'Yes' : 'No');
 
         setStatus('success');
 
@@ -73,9 +81,11 @@ export default function LineCallback() {
         // ✅ 온보딩 완료 여부에 따라 라우팅
         if (response.data.user.onboardingCompleted) {
           // 온보딩 완료 → 대시보드로
+          console.log('→ Redirecting to /dashboard');
           navigate('/dashboard');
         } else {
           // 온보딩 미완료 → 온보딩 페이지로
+          console.log('→ Redirecting to /onboarding1');
           navigate('/onboarding1');
         }
       } catch (err: any) {
@@ -94,7 +104,7 @@ export default function LineCallback() {
     };
 
     handleCallback();
-  }, [searchParams, navigate, lineCallback, toast]);
+  }, [searchParams, navigate]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center px-[25px]">

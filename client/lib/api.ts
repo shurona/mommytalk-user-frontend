@@ -115,21 +115,28 @@ export const authApi = {
   // Login
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     const response = await apiClient.post<LoginResponse>('/auth/login', data);
-    // ✅ httpOnly Cookie 사용 - localStorage 저장 불필요
+    // ✅ localStorage에 토큰 저장
+    if (response.data.token) {
+      localStorage.setItem('auth_token', response.data.token);
+    }
     return response.data;
   },
 
   // Signup
   signup: async (data: SignupRequest): Promise<SignupResponse> => {
     const response = await apiClient.post<SignupResponse>('/auth/signup', data);
-    // ✅ httpOnly Cookie 사용 - localStorage 저장 불필요
+    // ✅ localStorage에 토큰 저장
+    if (response.data.token) {
+      localStorage.setItem('auth_token', response.data.token);
+    }
     return response.data;
   },
 
   // Logout
   logout: async () => {
     const response = await apiClient.post('/auth/logout');
-    // ✅ httpOnly Cookie는 서버에서 삭제
+    // ✅ localStorage에서 토큰 삭제
+    localStorage.removeItem('auth_token');
     return response.data;
   },
 
@@ -146,7 +153,10 @@ export const authApi = {
   // LINE Login - Send authorization code to backend
   lineCallback: async (data: LineLoginCallbackRequest): Promise<LineLoginResponse> => {
     const response = await apiClient.post<LineLoginResponse>('/admin/v1/line/callback', data);
-    // ✅ 백엔드가 httpOnly Cookie로 토큰을 Set-Cookie 헤더로 전송
+    // ✅ localStorage에 토큰 저장
+    if (response.data.data.token) {
+      localStorage.setItem('auth_token', response.data.data.token);
+    }
     return response.data;
   },
 };

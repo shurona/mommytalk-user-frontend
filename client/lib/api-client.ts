@@ -10,14 +10,19 @@ const apiClient: AxiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // ✅ httpOnly Cookie를 자동으로 포함
+  withCredentials: true, // CORS 설정 (쿠키 포함)
 });
 
-// Request interceptor
+// Request interceptor - Add Authorization header
 apiClient.interceptors.request.use(
   (config) => {
-    // ✅ httpOnly Cookie를 사용하므로 Authorization 헤더 불필요
-    // 쿠키는 브라우저가 자동으로 포함시킴
+    // ✅ localStorage에서 토큰을 가져와서 Authorization 헤더에 추가
+    const token = localStorage.getItem('auth_token');
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
     return config;
   },
   (error) => {
@@ -35,9 +40,8 @@ apiClient.interceptors.response.use(
     if (error.response) {
       switch (error.response.status) {
         case 401:
-          // Unauthorized - Redirect to login
-          // ✅ httpOnly Cookie는 서버가 자동으로 삭제
-          // 로그인 페이지로 리다이렉트만 수행
+          // Unauthorized - Clear token and redirect to login
+          localStorage.removeItem('auth_token');
           if (window.location.pathname !== '/' && window.location.pathname !== '/line-callback') {
             window.location.href = '/';
           }
