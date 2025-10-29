@@ -25,3 +25,6 @@ dist-ssr
 
 .config/
 .env
+
+# md 파일은 넣지 않는다.
+*.md
