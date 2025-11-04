@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BackButton, OptionCard } from "@/components";
 import { Button } from "@/components/ui/button";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 type LanguageLevel = "basic" | "conversation" | "advanced";
 
@@ -9,8 +10,12 @@ export default function Onboarding3() {
   const [selectedLevel, setSelectedLevel] =
     useState<LanguageLevel>("conversation");
   const navigate = useNavigate();
+  const { setLanguageLevel } = useOnboarding();
 
-  const handleNext = () => navigate("/onboarding4");
+  const handleNext = () => {
+    setLanguageLevel(selectedLevel);
+    navigate("/onboarding4");
+  };
   const handleBack = () => navigate("/onboarding2");
 
   const languageOptions = [

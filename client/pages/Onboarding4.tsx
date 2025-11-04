@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BackButton, OptionCard } from "@/components";
 import { Button } from "@/components/ui/button";
+import { useOnboarding } from "@/contexts/OnboardingContext";
+import { useSubmitOnboarding } from "@/hooks/use-api";
+import { LANGUAGE_LEVEL_MAP, RESPONSE_LEVEL_MAP } from "@/types/api";
+import { userApi } from "@/lib/api";
 
 type ResponseLevel = "short-answer" | "short-sentence" | "listening-only";
 
@@ -9,9 +13,34 @@ export default function Onboarding4() {
   const [selectedLevel, setSelectedLevel] =
     useState<ResponseLevel>("short-answer");
   const navigate = useNavigate();
+  const { childName, languageLevel, setResponseLevel } = useOnboarding();
+  const submitOnboarding = useSubmitOnboarding();
 
-  const handleNext = () => {
-    navigate("/onboarding5");
+  const handleNext = async () => {
+    setResponseLevel(selectedLevel);
+
+    // Submit onboarding data to server
+    try {
+      await submitOnboarding.mutateAsync({
+        childName,
+        userLevel: LANGUAGE_LEVEL_MAP[languageLevel],
+        childLevel: RESPONSE_LEVEL_MAP[selectedLevel],
+      });
+
+      // 온보딩 완료 후 최신 유저 정보 받아오기
+      const userInfoStr = localStorage.getItem('user_info');
+      const userInfo = userInfoStr ? JSON.parse(userInfoStr) : null;
+      const channelIdNum = userInfo?.channelId;
+
+      if (channelIdNum) {
+        const userResponse = await userApi.getMe(channelIdNum.toString());
+        localStorage.setItem('user_info', JSON.stringify(userResponse.data));
+      }
+
+      navigate("/onboarding5");
+    } catch (error) {
+      navigate("/onboarding-fail");
+    }
   };
 
   const handleBack = () => {
@@ -75,9 +104,10 @@ export default function Onboarding4() {
             {/* Next Button */}
             <Button
               onClick={handleNext}
+              disabled={submitOnboarding.isPending}
               className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] mt-[51px]"
             >
-              다음 3/3
+              {submitOnboarding.isPending ? "설정 중..." : "다음 3/3"}
             </Button>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import type { LanguageLevel, ResponseLevel, OnboardingData } from '@/types/api';
+import { LANGUAGE_LEVEL_MAP, RESPONSE_LEVEL_MAP } from '@/types/api';
 
 interface OnboardingContextType {
   // State
@@ -39,8 +40,8 @@ export function OnboardingProvider({ children }: OnboardingProviderProps) {
 
     return {
       childName,
-      languageLevel,
-      responseLevel,
+      userLevel: LANGUAGE_LEVEL_MAP[languageLevel],
+      childLevel: RESPONSE_LEVEL_MAP[responseLevel],
     };
   };
 

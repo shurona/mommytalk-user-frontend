@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useLineCallback } from '@/hooks/use-api';
+import { useKakaoCallback } from '@/hooks/use-api';
 import { useToast } from '@/hooks/use-toast';
 
-export default function LineCallback() {
+export default function KakaoCallback() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const lineCallback = useLineCallback();
+  const kakaoCallback = useKakaoCallback();
 
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [error, setError] = useState<string>('');
@@ -36,7 +36,7 @@ export default function LineCallback() {
       }
 
       // ✅ State 검증 (CSRF 방지) - localStorage 사용
-      const savedState = localStorage.getItem('line_login_state');
+      const savedState = localStorage.getItem('kakao_login_state');
 
       if (!savedState || savedState !== state) {
         setStatus('error');
@@ -51,15 +51,15 @@ export default function LineCallback() {
       }
 
       // ✅ State 사용 후 삭제
-      localStorage.removeItem('line_login_state');
+      localStorage.removeItem('kakao_login_state');
 
       try {
         // 백엔드 API 호출 - Authorization Code 전송
-        const response = await lineCallback.mutateAsync({
+        const response = await kakaoCallback.mutateAsync({
           code: code,
           state: state,
-          redirectUri: import.meta.env.VITE_LINE_REDIRECT_URI,
-          channelCode: 'MOMJ',
+          redirectUri: import.meta.env.VITE_KAKAO_REDIRECT_URI,
+          channelCode: 'MOMK',
         });
 
         setStatus('success');

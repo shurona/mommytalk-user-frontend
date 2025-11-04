@@ -1,10 +1,69 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/hooks/use-api";
 
 export default function Profile() {
   const navigate = useNavigate();
-  const [isOnboarded] = useState(true);
+  const [isOnboarded, setIsOnboarded] = useState(true);
+  const [childName, setChildName] = useState("");
+  const [channelId, setChannelId] = useState<string>("");
+
+  // localStorage에서 channelId 가져오기
+  useEffect(() => {
+    const userInfoStr = localStorage.getItem('user_info');
+    if (userInfoStr) {
+      try {
+        const user = JSON.parse(userInfoStr);
+        if (user.channelId) {
+          setChannelId(user.channelId.toString());
+        }
+      } catch (error) {
+        console.error('Failed to parse user info:', error);
+      }
+    }
+  }, []);
+
+  // API로 유저 정보 가져오기
+  const { data: userResponse, isLoading, isError } = useUser(channelId);
+
+  // 유저 정보 업데이트
+  useEffect(() => {
+    if (userResponse?.data) {
+      const user = userResponse.data;
+      setIsOnboarded(user.onboardingCompleted || false);
+      setChildName(user.childName || "");
+
+      // localStorage에도 최신 정보 저장
+      localStorage.setItem('user_info', JSON.stringify(user));
+    }
+  }, [userResponse]);
+
+  // 로그아웃 처리
+  const handleLogout = () => {
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_info');
+    navigate('/', { replace: true });
+  };
+
+  // 로딩 상태
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-[#888] text-[16px]">로딩 중...</p>
+      </div>
+    );
+  }
+
+  // 에러 상태
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-[20px] px-[25px]">
+        <p className="text-[#888] text-[16px]">유저 정보를 불러오는데 실패했습니다.</p>
+        <Button onClick={() => navigate('/')}>로그인 페이지로 이동</Button>
+      </div>
+    );
+  }
 
   if (!isOnboarded) {
     return (
@@ -52,7 +111,10 @@ export default function Profile() {
             </div>
 
             <div className="flex justify-center items-center h-[23px]">
-              <button className="text-[#FF9E08] text-center text-[16px] font-medium leading-[145%] tracking-[-0.64px]">
+              <button
+                onClick={handleLogout}
+                className="text-[#FF9E08] text-center text-[16px] font-medium leading-[145%] tracking-[-0.64px]"
+              >
                 로그아웃
               </button>
             </div>
@@ -98,7 +160,7 @@ export default function Profile() {
             </label>
             <div className="w-full h-[65px] px-[15px] py-[20px] flex items-center rounded-[20px] bg-[#F9F9FA]">
               <span className="text-[#111] text-[16px] font-bold leading-[145%] tracking-[-0.64px]">
-                도니
+                {childName || "이름 없음"}
               </span>
             </div>
           </div>
@@ -115,7 +177,10 @@ export default function Profile() {
           </div>
 
           <div className="flex justify-center items-center">
-            <button className="text-[#FF9E08] text-center text-[16px] font-medium leading-[145%] tracking-[-0.64px]">
+            <button
+              onClick={handleLogout}
+              className="text-[#FF9E08] text-center text-[16px] font-medium leading-[145%] tracking-[-0.64px]"
+            >
               로그아웃
             </button>
           </div>

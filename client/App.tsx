@@ -6,14 +6,17 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { OnboardingProvider } from "./contexts/OnboardingContext";
 import Login from "./pages/Login";
 import LineCallback from "./pages/LineCallback";
+import KakaoCallback from "./pages/KakaoCallback";
 import Onboarding1 from "./pages/Onboarding1";
 import Onboarding2 from "./pages/Onboarding2";
 import Onboarding3 from "./pages/Onboarding3";
 import Onboarding4 from "./pages/Onboarding4";
 import Onboarding5 from "./pages/Onboarding5";
 import Onboarding6 from "./pages/Onboarding6";
+import OnboardingFail from "./pages/OnboardingFail";
 import ContentCreation from "./pages/ContentCreation";
 import ContentCreationResult from "./pages/ContentCreationResult";
 import SentenceDetail from "./pages/SentenceDetail";
@@ -28,14 +31,16 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
+    <OnboardingProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
           {/* Auth Routes */}
           <Route path="/" element={<Login />} />
           <Route path="/line-callback" element={<LineCallback />} />
+          <Route path="/kakao-callback" element={<KakaoCallback />} />
 
           {/* Onboarding Routes */}
           <Route path="/onboarding1" element={<Onboarding1 />} />
@@ -44,6 +49,7 @@ const App = () => (
           <Route path="/onboarding4" element={<Onboarding4 />} />
           <Route path="/onboarding5" element={<Onboarding5 />} />
           <Route path="/onboarding6" element={<Onboarding6 />} />
+          <Route path="/onboarding-fail" element={<OnboardingFail />} />
 
           {/* App Routes */}
           <Route path="/dashboard" element={<ContentCreation />} />
@@ -57,9 +63,10 @@ const App = () => (
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </OnboardingProvider>
   </QueryClientProvider>
 );
 

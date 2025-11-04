@@ -1,15 +1,35 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { BottomNav } from "@/components";
 
 export default function SentenceDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const location = useLocation();
+
+  // Records 페이지에서 전달받은 state 데이터 사용
+  const { korean, english, date } = location.state || {};
+
+  // 날짜 포맷팅 함수 (YYYY-MM-DD -> YYYY년 M월 D일)
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return `${year}년 ${month}월 ${day}일`;
+  };
 
   const sentenceData = {
-    date: "2025년 9월 29일",
-    korean: "얼른 가서 손 씻고 와",
-    english: "Go wash your hands",
+    date: formatDate(date),
+    korean: korean || "",
+    english: english || "",
   };
+
+  // 데이터가 없으면 Records 페이지로 리다이렉트
+  if (!korean || !english || !date) {
+    navigate("/records");
+    return null;
+  }
 
   return (
     <div className="min-h-[850px] bg-white flex flex-col">

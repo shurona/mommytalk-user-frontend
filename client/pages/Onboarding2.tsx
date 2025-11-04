@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 export default function Onboarding2() {
   const [childName, setChildName] = useState("");
   const navigate = useNavigate();
+  const { setChildName: saveChildName } = useOnboarding();
 
   const handleNext = () => {
     if (childName.trim()) {
+      saveChildName(childName.trim());
       navigate("/onboarding3");
     }
   };

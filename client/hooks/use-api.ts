@@ -6,6 +6,8 @@ import type {
   LoginRequest,
   SignupRequest,
   LineLoginCallbackRequest,
+  KakaoLoginCallbackRequest,
+  GenerateSentenceRequest,
 } from '@/types/api';
 
 // ============================================
@@ -37,12 +39,18 @@ export const useOnboardingSettings = () => {
 // User Hooks
 // ============================================
 
-export const useUser = () => {
+export const useUser = (channelId?: string) => {
   return useQuery({
-    queryKey: ['user'],
-    queryFn: () => userApi.getMe(),
+    queryKey: ['user', channelId],
+    queryFn: () => {
+      if (!channelId) {
+        throw new Error('channelId is required');
+      }
+      return userApi.getMe(channelId);
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
+    enabled: !!channelId, // channelId가 있을 때만 실행
   });
 };
 
@@ -95,6 +103,27 @@ export const useWeeklySentence = () => {
     queryKey: ['weekly-sentence'],
     queryFn: () => sentenceApi.getWeeklySentence(),
     staleTime: 60 * 60 * 1000, // 1 hour
+  });
+};
+
+export const useGenerateSentence = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: GenerateSentenceRequest) => sentenceApi.generateSentence(data),
+    onSuccess: () => {
+      // Invalidate user sentences list to refetch
+      queryClient.invalidateQueries({ queryKey: ['user-sentences'] });
+    },
+  });
+};
+
+export const useUserSentences = (year: number, month: number) => {
+  return useQuery({
+    queryKey: ['user-sentences', year, month],
+    queryFn: () => sentenceApi.getUserSentences(year, month),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    enabled: month >= 1 && month <= 12, // Only fetch if valid month
   });
 };
 
@@ -188,6 +217,18 @@ export const useLineCallback = () => {
     mutationFn: (data: LineLoginCallbackRequest) => authApi.lineCallback(data),
     onSuccess: () => {
       // Refetch user data after LINE login
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+  });
+};
+
+export const useKakaoCallback = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: KakaoLoginCallbackRequest) => authApi.kakaoCallback(data),
+    onSuccess: () => {
+      // Refetch user data after Kakao login
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
   });

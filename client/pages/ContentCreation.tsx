@@ -5,25 +5,68 @@ import { Textarea } from "@/components/ui/textarea";
 import { Panel } from "@/components/common/Panel";
 import { SectionTitle } from "@/components/common/SectionTitle";
 import { BottomNav, DashboardHeader } from "@/components";
+import { useGenerateSentence } from "@/hooks/use-api";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ContentCreation() {
   const navigate = useNavigate();
   const [sentenceText, setSentenceText] = useState("");
   const maxChars = 100;
+  const generateSentence = useGenerateSentence();
+  const { toast } = useToast();
 
-  const handleCreateSentence = () => {
-    if (sentenceText.trim()) {
+  // Get user info from localStorage (channelId)
+  const getUserChannelId = (): number | null => {
+    const token = localStorage.getItem('auth_token');
+    if (!token) return null;
+
+    // JWT 토큰에서 user 정보를 추출하거나, 별도로 저장된 user 정보 사용
+    // 임시: localStorage에서 user 정보 가져오기
+    const userStr = localStorage.getItem('user_info');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      return user.channelId;
+    }
+    return null;
+  };
+
+  const handleCreateSentence = async () => {
+    if (!sentenceText.trim()) return;
+
+    const channelId = getUserChannelId();
+    if (!channelId) {
+      toast({
+        title: '로그인 필요',
+        description: '다시 로그인해주세요.',
+        variant: 'destructive',
+      });
+      navigate('/');
+      return;
+    }
+
+    try {
+      const response = await generateSentence.mutateAsync({
+        channelId,
+        sentence: sentenceText.trim(),
+      });
+
       // Navigate to result page with the sentence data
       navigate("/content-result", {
         state: {
-          korean: sentenceText,
-          english: "Go wash your hands", // In real app, this would come from AI/API
+          korean: sentenceText.trim(),
+          english: response.data.sentence,
         },
+      });
+    } catch (error: any) {
+      toast({
+        title: '문장 생성 실패',
+        description: error.response?.data?.message || '문장 생성 중 오류가 발생했습니다.',
+        variant: 'destructive',
       });
     }
   };
 
-  const isDisabled = !sentenceText.trim();
+  const isDisabled = !sentenceText.trim() || generateSentence.isPending;
 
   return (
     <div className="min-h-[850px] bg-white flex flex-col">

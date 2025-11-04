@@ -13,6 +13,11 @@ import type {
   SignupResponse,
   LineLoginCallbackRequest,
   LineLoginResponse,
+  KakaoLoginCallbackRequest,
+  KakaoLoginResponse,
+  GenerateSentenceRequest,
+  GenerateSentenceResponse,
+  UserSentenceListResponse,
 } from '@/types/api';
 
 // ============================================
@@ -22,13 +27,13 @@ import type {
 export const onboardingApi = {
   // Submit onboarding data
   submitOnboarding: async (data: OnboardingRequest): Promise<OnboardingResponse> => {
-    const response = await apiClient.post<OnboardingResponse>('/onboarding', data);
+    const response = await apiClient.post<OnboardingResponse>('/v1/client/users/onboarding', data);
     return response.data;
   },
 
   // Get user's onboarding settings
   getSettings: async (): Promise<OnboardingResponse> => {
-    const response = await apiClient.get<OnboardingResponse>('/onboarding/settings');
+    const response = await apiClient.get<OnboardingResponse>('/v1/client/users/onboarding/settings');
     return response.data;
   },
 };
@@ -39,14 +44,16 @@ export const onboardingApi = {
 
 export const userApi = {
   // Get current user info
-  getMe: async (): Promise<UserResponse> => {
-    const response = await apiClient.get<UserResponse>('/users/me');
+  getMe: async (channelId: string): Promise<UserResponse> => {
+    const response = await apiClient.get<UserResponse>('/v1/client/users/me', {
+      params: { channelId },
+    });
     return response.data;
   },
 
   // Update user settings
   updateSettings: async (data: Partial<OnboardingRequest>): Promise<UserResponse> => {
-    const response = await apiClient.patch<UserResponse>('/users/me', data);
+    const response = await apiClient.patch<UserResponse>('/v1/client/users/me', data);
     return response.data;
   },
 };
@@ -70,9 +77,23 @@ export const sentenceApi = {
     return response.data;
   },
 
-  // Create new sentence (AI generation)
+  // Create new sentence (AI generation) - 기존 API
   createSentence: async (data: CreateSentenceRequest): Promise<CreateSentenceResponse> => {
     const response = await apiClient.post<CreateSentenceResponse>('/sentences', data);
+    return response.data;
+  },
+
+  // Generate sentence with AI - 실제 사용
+  generateSentence: async (data: GenerateSentenceRequest): Promise<GenerateSentenceResponse> => {
+    const response = await apiClient.post<GenerateSentenceResponse>('/v1/client/users/sentences', data);
+    return response.data;
+  },
+
+  // Get user's sentence list by month
+  getUserSentences: async (year: number, month: number): Promise<UserSentenceListResponse> => {
+    const response = await apiClient.get<UserSentenceListResponse>('/v1/client/users/sentences', {
+      params: { year, month },
+    });
     return response.data;
   },
 
@@ -152,7 +173,17 @@ export const authApi = {
 
   // LINE Login - Send authorization code to backend
   lineCallback: async (data: LineLoginCallbackRequest): Promise<LineLoginResponse> => {
-    const response = await apiClient.post<LineLoginResponse>('/admin/v1/line/callback', data);
+    const response = await apiClient.post<LineLoginResponse>('/client/v1/line/callback', data);
+    // ✅ localStorage에 토큰 저장
+    if (response.data.data.token) {
+      localStorage.setItem('auth_token', response.data.data.token);
+    }
+    return response.data;
+  },
+
+  // Kakao Login - Send authorization code to backend
+  kakaoCallback: async (data: KakaoLoginCallbackRequest): Promise<KakaoLoginResponse> => {
+    const response = await apiClient.post<KakaoLoginResponse>('/client/v1/kakao/callback', data);
     // ✅ localStorage에 토큰 저장
     if (response.data.data.token) {
       localStorage.setItem('auth_token', response.data.data.token);
