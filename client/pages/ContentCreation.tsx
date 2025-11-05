@@ -97,9 +97,16 @@ export default function ContentCreation() {
               <Button
                 onClick={handleCreateSentence}
                 disabled={isDisabled}
-                className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] text-white bg-[#FF9B00] hover:brightness-95 disabled:bg-[#FF9B00] disabled:opacity-100"
+                className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] text-white bg-[#FF9B00] hover:brightness-95 disabled:bg-[#FF9B00] disabled:opacity-50"
               >
-                나만의 문장 만들기
+                {generateSentence.isPending ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>문장 생성 중...</span>
+                  </div>
+                ) : (
+                  "나만의 문장 만들기"
+                )}
               </Button>
             </Panel>
 
