@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/hooks/use-api";
+import { useOnboarding } from "@/contexts/OnboardingContext";
 
 export default function Profile() {
   const navigate = useNavigate();
   const [isOnboarded, setIsOnboarded] = useState(true);
   const [childName, setChildName] = useState("");
   const [channelId, setChannelId] = useState<string>("");
+  const { setChildName: saveChildName } = useOnboarding();
 
   // localStorage에서 channelId 가져오기
   useEffect(() => {
@@ -145,7 +147,10 @@ export default function Profile() {
 
           <div className="flex flex-col items-center gap-[13px]">
             <Button
-              onClick={() => navigate("/onboarding3")}
+              onClick={() => {
+                saveChildName(childName);
+                navigate("/onboarding3");
+              }}
               className="w-full h-[62px] rounded-[20px] text-[16px] tracking-[-0.64px]"
             >
               맞춤 레벨 변경하기
