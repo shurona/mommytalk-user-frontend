@@ -15,11 +15,11 @@ export default function Onboarding6() {
 
   return (
     <div className="min-h-screen bg-background flex justify-center px-[25px] py-[25px]">
-      <div className="w-full max-w-[393px] flex flex-col gap-[51px]">
+      <div className="w-full max-w-[393px] flex flex-col gap-[25px]">
         <BackButton onClick={handleBack} />
 
         <div className="flex flex-col gap-[81px]">
-          <div className="flex flex-col gap-[101px]">
+          <div className="flex flex-col gap-[35px]">
             <h1 className="text-[22px] font-bold leading-[145%] text-foreground">
               우리집 맞춤 레벨 설정이 끝났어요
             </h1>
@@ -35,12 +35,11 @@ export default function Onboarding6() {
 
           <div className="flex flex-col gap-[20px]">
             <p className="text-[16px] font-medium leading-[145%] text-muted-foreground">
-              📌 메시지를 받으려면 마미톡잉글리쉬 카카오톡 채널 친구 추가가
+              📌 메시지를 받으려면 마미톡잉글리시 카카오톡 채널 친구 추가가
               필요해요.
               <br />
               <br />
-              📌 아직 친구추가를 하지 않았다면, 지금 바로 아래 버튼을
-              눌러주세요!
+              📌 아직 친구 추가를 하지 않으셨다면, 지금 바로 아래 '친구추가 하러 가기' 버튼을 눌러 친구 추가를 진행해주세요!
             </p>
 
             <Button
@@ -48,7 +47,7 @@ export default function Onboarding6() {
               className="w-full h-[62px] rounded-[20px] text-[18px] tracking-[-0.72px]"
               style={{ backgroundColor: "#FFE100", color: "#111" }}
             >
-              카카오톡채널 친구 추가하기
+              친구추가 하러 가기
             </Button>
 
             <Button

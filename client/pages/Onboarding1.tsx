@@ -16,7 +16,7 @@ export default function Onboarding1() {
           <br />
           간단하게 답을 선택해 주시면 됩니다.
           <br />
-          설정 완료까지 2분이면 충분해요
+          설정 완료까지 2분이면 충분해요!
         </>
       }
       ctaLabel="시작하기"

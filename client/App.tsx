@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "./contexts/OnboardingContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import LineCallback from "./pages/LineCallback";
 import KakaoCallback from "./pages/KakaoCallback";
@@ -43,23 +44,23 @@ const App = () => (
           <Route path="/kakao-callback" element={<KakaoCallback />} />
 
           {/* Onboarding Routes */}
-          <Route path="/onboarding1" element={<Onboarding1 />} />
-          <Route path="/onboarding2" element={<Onboarding2 />} />
-          <Route path="/onboarding3" element={<Onboarding3 />} />
-          <Route path="/onboarding4" element={<Onboarding4 />} />
-          <Route path="/onboarding5" element={<Onboarding5 />} />
-          <Route path="/onboarding6" element={<Onboarding6 />} />
-          <Route path="/onboarding-fail" element={<OnboardingFail />} />
+          <Route path="/onboarding1" element={<ProtectedRoute><Onboarding1 /></ProtectedRoute>} />
+          <Route path="/onboarding2" element={<ProtectedRoute><Onboarding2 /></ProtectedRoute>} />
+          <Route path="/onboarding3" element={<ProtectedRoute><Onboarding3 /></ProtectedRoute>} />
+          <Route path="/onboarding4" element={<ProtectedRoute><Onboarding4 /></ProtectedRoute>} />
+          <Route path="/onboarding5" element={<ProtectedRoute><Onboarding5 /></ProtectedRoute>} />
+          <Route path="/onboarding6" element={<ProtectedRoute><Onboarding6 /></ProtectedRoute>} />
+          <Route path="/onboarding-fail" element={<ProtectedRoute><OnboardingFail /></ProtectedRoute>} />
 
           {/* App Routes */}
-          <Route path="/dashboard" element={<ContentCreation />} />
-          <Route path="/content-result" element={<ContentCreationResult />} />
-          <Route path="/sentence/:id" element={<SentenceDetail />} />
-          <Route path="/list-detail/:id" element={<ListOption1Detail />} />
-          <Route path="/mommytalk365/:id" element={<Mommytalk365Detail />} />
-          <Route path="/records" element={<Records />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/logout" element={<Logout />} />
+          <Route path="/dashboard" element={<ProtectedRoute><ContentCreation /></ProtectedRoute>} />
+          <Route path="/content-result" element={<ProtectedRoute><ContentCreationResult /></ProtectedRoute>} />
+          <Route path="/sentence/:id" element={<ProtectedRoute><SentenceDetail /></ProtectedRoute>} />
+          <Route path="/list-detail/:id" element={<ProtectedRoute><ListOption1Detail /></ProtectedRoute>} />
+          <Route path="/mommytalk365/:id" element={<ProtectedRoute><Mommytalk365Detail /></ProtectedRoute>} />
+          <Route path="/records" element={<ProtectedRoute><Records /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/logout" element={<ProtectedRoute><Logout /></ProtectedRoute>} />
 
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

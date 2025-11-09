@@ -10,13 +10,15 @@ import { userApi } from "@/lib/api";
 type ResponseLevel = "short-answer" | "short-sentence" | "listening-only";
 
 export default function Onboarding4() {
-  const [selectedLevel, setSelectedLevel] =
-    useState<ResponseLevel>("short-answer");
   const navigate = useNavigate();
-  const { childName, languageLevel, setResponseLevel } = useOnboarding();
+  const { childName, languageLevel, responseLevel: savedResponseLevel, setResponseLevel } = useOnboarding();
   const submitOnboarding = useSubmitOnboarding();
+  const [selectedLevel, setSelectedLevel] =
+    useState<ResponseLevel | null>(savedResponseLevel);
 
   const handleNext = async () => {
+    if (!selectedLevel) return;
+
     setResponseLevel(selectedLevel);
 
     // Submit onboarding data to server
@@ -49,22 +51,22 @@ export default function Onboarding4() {
 
   const responseOptions = [
     {
-      id: "short-answer" as ResponseLevel,
-      english: "Okay, Mommy! / Wait, please!",
-      title: "짧은 대답",
-      description: "한두 단어로 쉽게 따라 말해요.",
+      id: "listening-only" as ResponseLevel,
+      english: "레벨 1. 아직 대답하지 않아도 괜찮아요.",
+      title: "듣기 연습",
+      description: "어린 아이라면 듣기 중심으로 시작해요.",
     },
     {
       id: "short-sentence" as ResponseLevel,
-      english: "Okay, I'm going! / I washed my hands!",
+      english: "레벨 2. Okay, I'm going! / I washed my hands!",
       title: "짧은 문장",
       description: "짧은 문장으로 표현해요.",
     },
     {
-      id: "listening-only" as ResponseLevel,
-      english: "아직 대답하지 않아도 괜찮아요.",
-      title: "듣기 연습",
-      description: "어린 아이라면 듣기 중심으로 시작해요.",
+      id: "short-answer" as ResponseLevel,
+      english: "레벨 3. Okay, Mommy! / Wait, please!",
+      title: "짧은 대답",
+      description: "한두 단어로 쉽게 따라 말해요.",
     },
   ];
 
@@ -80,7 +82,7 @@ export default function Onboarding4() {
             <div className="flex flex-col gap-[21px]">
               <div className="flex flex-col gap-[23px]">
                 <h1 className="text-xl sm:text-[22px] font-bold leading-[145%] text-foreground">
-                  도니가 대답으로 연습할 문장은
+                  {childName}가 대답으로 연습할 문장은
                   <br />
                   어느 정도가 좋을까요?
                 </h1>
@@ -101,11 +103,10 @@ export default function Onboarding4() {
               </div>
             </div>
 
-            {/* Next Button */}
             <Button
               onClick={handleNext}
-              disabled={submitOnboarding.isPending}
-              className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] mt-[51px]"
+              disabled={!selectedLevel || submitOnboarding.isPending}
+              className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] mt-[15px]"
             >
               {submitOnboarding.isPending ? "설정 중..." : "다음 3/3"}
             </Button>

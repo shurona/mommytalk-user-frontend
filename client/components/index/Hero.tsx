@@ -30,7 +30,7 @@ export function Hero({
       aria-labelledby={headingId}
       className="min-h-[812px] bg-background flex items-start justify-center px-[25px] sm:px-4"
     >
-      <div className="w-full max-w-[393px] flex flex-col items-center gap-[64px] py-[100px]">
+      <div className="w-full max-w-[393px] flex flex-col items-center gap-[40px] py-[25px]">
         <div className="flex justify-center" aria-hidden>
           <img
             src={logoSrc}
@@ -51,7 +51,7 @@ export function Hero({
           />
         </div>
 
-        <div className="flex flex-col items-center gap-[64px] text-left w-full">
+        <div className="flex flex-col items-center gap-[40px] text-left w-full">
           <h1
             id={headingId}
             className="text-xl sm:text-[22px] font-bold leading-[145%] text-foreground w-full"

@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 
 export default function Onboarding2() {
-  const [childName, setChildName] = useState("");
   const navigate = useNavigate();
-  const { setChildName: saveChildName } = useOnboarding();
+  const { childName: savedChildName, setChildName: saveChildName } = useOnboarding();
+  const [childName, setChildName] = useState(savedChildName);
 
   const handleNext = () => {
     if (childName.trim()) {
@@ -17,7 +17,7 @@ export default function Onboarding2() {
 
   return (
     <div className="min-h-[812px] bg-background flex flex-row justify-center px-[25px] sm:px-4">
-      <div className="w-full max-w-[393px] flex flex-col items-center gap-[392px] py-[100px]">
+      <div className="w-full max-w-[393px] flex flex-col items-center gap-[25px] py-[25px]">
         <div className="w-full sm:w-full flex flex-col gap-[55px]">
           <h1 className="text-xl sm:text-[22px] font-bold leading-[145%] text-foreground">
             아이를 어떻게 부를까요?
