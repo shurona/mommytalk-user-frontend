@@ -133,7 +133,16 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col px-[25px] py-[25px]">
-      <div className="w-full max-w-[343px] mx-auto flex flex-col gap-[25px]">
+      <div className="w-full max-w-[343px] mx-auto flex flex-col gap-[25px] relative">
+        {/* X 버튼 */}
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-0 right-0 w-[24px] h-[24px] flex items-center justify-center focus:outline-none"
+          aria-label="닫기"
+        >
+          <img src="/assets/images/x_button_profile.svg" alt="닫기" className="w-full h-full" />
+        </button>
+
         <h1 className="text-[#111] text-center text-[16px] font-bold leading-[145%]">
           내 계정
         </h1>
@@ -154,7 +163,7 @@ export default function Profile() {
             <Button
               onClick={() => {
                 saveChildName(childName);
-                navigate("/onboarding3");
+                navigate("/onboarding3", { state: { fromProfile: true } });
               }}
               className="w-full h-[62px] rounded-[20px] text-[16px] tracking-[-0.64px]"
             >

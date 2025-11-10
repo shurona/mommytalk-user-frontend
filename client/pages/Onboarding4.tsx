@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BackButton, OptionCard } from "@/components";
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
@@ -11,10 +11,14 @@ type ResponseLevel = "short-answer" | "short-sentence" | "listening-only";
 
 export default function Onboarding4() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { childName, languageLevel, responseLevel: savedResponseLevel, setResponseLevel } = useOnboarding();
   const submitOnboarding = useSubmitOnboarding();
   const [selectedLevel, setSelectedLevel] =
     useState<ResponseLevel | null>(savedResponseLevel);
+
+  // Check if coming from profile
+  const fromProfile = location.state?.fromProfile === true;
 
   const handleNext = async () => {
     if (!selectedLevel) return;
@@ -39,14 +43,23 @@ export default function Onboarding4() {
         localStorage.setItem('user_info', JSON.stringify(userResponse.data));
       }
 
-      navigate("/onboarding5");
+      // If from profile, go back to profile, otherwise continue onboarding
+      if (fromProfile) {
+        navigate("/profile");
+      } else {
+        navigate("/onboarding5");
+      }
     } catch (error) {
       navigate("/onboarding-fail");
     }
   };
 
   const handleBack = () => {
-    navigate("/onboarding3");
+    if (fromProfile) {
+      navigate("/onboarding3", { state: { fromProfile: true } });
+    } else {
+      navigate("/onboarding3");
+    }
   };
 
   const responseOptions = [
@@ -73,12 +86,10 @@ export default function Onboarding4() {
   return (
     <div className="flex min-h-[812px] px-[25px] py-[25px] bg-background w-full justify-center">
       <div className="w-full max-w-[393px] flex flex-col">
-        {/* Back Button */}
-        <div className="flex flex-col">
-          <BackButton onClick={handleBack} />
+        <BackButton onClick={handleBack} />
 
-          {/* Content */}
-          <div className="flex flex-col justify-between flex-grow">
+        {/* Content */}
+        <div className="flex flex-col justify-between flex-grow">
             <div className="flex flex-col gap-[21px]">
               <div className="flex flex-col gap-[23px]">
                 <h1 className="text-xl sm:text-[22px] font-bold leading-[145%] text-foreground">
@@ -103,14 +114,13 @@ export default function Onboarding4() {
               </div>
             </div>
 
-            <Button
-              onClick={handleNext}
-              disabled={!selectedLevel || submitOnboarding.isPending}
-              className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] mt-[15px]"
-            >
-              {submitOnboarding.isPending ? "설정 중..." : "다음 3/3"}
-            </Button>
-          </div>
+          <Button
+            onClick={handleNext}
+            disabled={!selectedLevel || submitOnboarding.isPending}
+            className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] mt-[15px]"
+          >
+            {submitOnboarding.isPending ? "설정 중..." : "다음 3/3"}
+          </Button>
         </div>
       </div>
     </div>

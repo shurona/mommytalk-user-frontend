@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BackButton, OptionCard } from "@/components";
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
@@ -8,17 +8,28 @@ type LanguageLevel = "basic" | "conversation" | "advanced";
 
 export default function Onboarding3() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { childName, languageLevel: savedLanguageLevel, setLanguageLevel } = useOnboarding();
   const [selectedLevel, setSelectedLevel] =
     useState<LanguageLevel | null>(savedLanguageLevel);
 
+  // Check if coming from profile
+  const fromProfile = location.state?.fromProfile === true;
+
   const handleNext = () => {
     if (selectedLevel) {
       setLanguageLevel(selectedLevel);
-      navigate("/onboarding4");
+      navigate("/onboarding4", { state: { fromProfile } });
     }
   };
-  const handleBack = () => navigate("/onboarding2");
+
+  const handleBack = () => {
+    if (fromProfile) {
+      navigate("/profile");
+    } else {
+      navigate("/onboarding2");
+    }
+  };
 
   const languageOptions = [
     {
@@ -44,12 +55,10 @@ export default function Onboarding3() {
   return (
     <div className="flex min-h-[812px] justify-center px-[25px] py-[25px] sm:px-[15px] bg-background w-full">
       <div className="max-w-[393px] w-full flex flex-col">
-        {/* Back area */}
-        <div className="flex flex-col">
-          <BackButton onClick={handleBack} />
+        <BackButton onClick={handleBack} />
 
-          {/* Main content */}
-          <div className="flex flex-col flex-grow justify-between">
+        {/* Main content */}
+        <div className="flex flex-col flex-grow justify-between">
             <div className="flex flex-col gap-[23px]">
               <h1 className="text-[22px] font-bold leading-[145%] text-foreground">
                 {childName}에게
@@ -81,7 +90,6 @@ export default function Onboarding3() {
                 2/3
               </Button>
             </div>
-          </div>
         </div>
       </div>
     </div>
