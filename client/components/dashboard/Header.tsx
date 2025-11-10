@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 export function Header() {
   const navigate = useNavigate();
   return (
-    <header className="w-full px-[25px] pt-[25px] pb-[24px] flex items-center justify-center relative">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white px-[25px] pt-[5px] pb-[5px] flex items-center justify-center relative border-b border-[#f0f0f0]">
       <img
         src="https://api.builder.io/api/v1/image/assets/TEMP/b02f1aa435ad4f110bf8f23ec72402b7180f26ff?width=220"
         alt="Mommytalk English 2"
-        className="h-12 w-[110px] object-contain"
+        className="h-auto w-[60px] object-contain"
       />
       <button
         onClick={() => navigate("/profile")}
-        className="absolute right-[25px] top-[37px] w-[25px] h-[25px] flex items-center justify-center"
+        className="absolute right-[25px] w-[25px] h-[25px] flex items-center justify-center"
         aria-label="More options"
       >
         <svg

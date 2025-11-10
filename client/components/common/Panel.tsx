@@ -2,7 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 export type PanelProps = React.HTMLAttributes<HTMLDivElement> & {
-  variant?: "outlined" | "blue";
+  variant?: "outlined" | "blue" | "yellow";
   minHeightClass?: string;
 };
 
@@ -17,6 +17,7 @@ export function Panel({
   const variants: Record<NonNullable<PanelProps["variant"]>, string> = {
     outlined: "border border-[#DBDBDB] bg-white",
     blue: "bg-[#ECF5FF]",
+    yellow: "bg-[#FFF2DD]",
   };
   return (
     <div

@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { BackButton } from "@/components";
 import { Button } from "@/components/ui/button";
+import { useOnboarding } from "@/contexts/OnboardingContext";
+import { LANGUAGE_LEVEL_MAP, RESPONSE_LEVEL_MAP } from "@/types/api";
 
 export default function Onboarding6() {
   const navigate = useNavigate();
+  const { languageLevel, responseLevel } = useOnboarding();
 
   const handleBack = () => {
     navigate("/onboarding5");
@@ -12,6 +15,13 @@ export default function Onboarding6() {
   const handleKakaoTalk = () => {
     window.open("http://pf.kakao.com/_SxmQxbn", "_blank");
   };
+
+  // userLevel과 childLevel 가져오기
+  const userLevel = languageLevel ? LANGUAGE_LEVEL_MAP[languageLevel] : 1;
+  const childLevel = responseLevel ? RESPONSE_LEVEL_MAP[responseLevel] : 1;
+
+  // 로컬 레벨 이미지 경로
+  const levelImageUrl = `/assets/images/Level_${userLevel}_${childLevel}.png`;
 
   return (
     <div className="min-h-screen bg-background flex justify-center px-[25px] py-[25px]">
@@ -26,10 +36,9 @@ export default function Onboarding6() {
 
             <img
               loading="lazy"
-              srcSet="https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279"
-              src="https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279?width=800"
-              alt="Level setting complete illustration"
-              className="aspect-[3.23] object-cover object-center w-full mt-[20px] min-h-[20px] min-w-[20px] overflow-hidden"
+              src={levelImageUrl}
+              alt={`Level ${userLevel}-${childLevel} illustration`}
+              className="w-full h-auto object-contain"
             />
           </div>
 

@@ -13,9 +13,9 @@ export const LANGUAGE_LEVEL_MAP = {
 } as const;
 
 export const RESPONSE_LEVEL_MAP = {
-  'short-answer': 1,
+  'listening-only': 1,
   'short-sentence': 2,
-  'listening-only': 3,
+  'short-answer': 3,
 } as const;
 
 export interface OnboardingData {

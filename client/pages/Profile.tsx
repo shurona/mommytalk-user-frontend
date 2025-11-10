@@ -41,6 +41,11 @@ export default function Profile() {
     }
   }, [userResponse]);
 
+  // 로컬 레벨 이미지 경로
+  const userLevel = userResponse?.data?.userLevel || 1;
+  const childLevel = userResponse?.data?.childLevel || 1;
+  const levelImageUrl = `/assets/images/Level_${userLevel}_${childLevel}.png`;
+
   // 로그아웃 처리
   const handleLogout = () => {
     localStorage.removeItem('auth_token');
@@ -139,9 +144,9 @@ export default function Profile() {
               레벨
             </label>
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fe9b9b01c41aa41ffb5a9c124b22fbbf4%2F6af2f4304e9e4c3f8a0e6e62c9fdc279"
-              alt="Level progression"
-              className="w-full h-auto aspect-[343/106.38]"
+              src={levelImageUrl}
+              alt={`Level ${userLevel}-${childLevel} progression`}
+              className="w-full h-auto object-contain"
             />
           </div>
 

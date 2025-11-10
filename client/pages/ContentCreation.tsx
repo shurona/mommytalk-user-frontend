@@ -69,11 +69,11 @@ export default function ContentCreation() {
   const isDisabled = !sentenceText.trim() || generateSentence.isPending;
 
   return (
-    <div className="min-h-[850px] bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <DashboardHeader />
 
-      <main className="flex-1 px-[25px] pb-[55px]">
-        <div className="w-full max-w-[343px] mx-auto pt-[25px]">
+      <main className="flex-1 px-[25px] pt-[60px] pb-[80px]">
+        <div className="w-full max-w-[343px] mx-auto">
           <div className="flex flex-col gap-[15px]">
             {/* Title */}
             <div className="flex flex-col gap-[5px]">
@@ -81,7 +81,7 @@ export default function ContentCreation() {
             </div>
 
             {/* Input Card */}
-            <Panel variant="outlined">
+            <Panel variant="yellow">
               <Textarea
                 value={sentenceText}
                 onChange={(e) => {

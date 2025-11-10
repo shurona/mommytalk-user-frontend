@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNav } from "@/components";
+import { Header as DashboardHeader } from "@/components/dashboard/Header";
 import { useUserSentences } from "@/hooks/use-api";
 
 type TabType = "my-sentences" | "mommytalk-365";
@@ -60,7 +61,8 @@ export default function Records() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <div className="flex flex-col justify-start items-center p-[25px] gap-[15px]">
+      <DashboardHeader />
+      <div className="flex flex-col justify-start items-center pt-[110px] px-[25px] pb-[25px] gap-[15px]">
         {/* 탭 버튼 */}
         <div className="inline-flex items-center gap-[5px] h-[39px]">
           <button
@@ -117,7 +119,7 @@ export default function Records() {
         </div>
       </div>
 
-      <main className="flex-1 flex flex-col justify-start items-center px-[25px] pb-[55px]">
+      <main className="flex-1 flex flex-col justify-start items-center px-[25px] pb-[80px]">
         <div className="w-full max-w-[343px] flex flex-col gap-[15px]">
           {/* 로딩 상태 */}
           {activeTab === "my-sentences" && isLoading && (
