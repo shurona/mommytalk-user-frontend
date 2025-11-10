@@ -15,19 +15,19 @@ export default function ContentCreationResult() {
   const maxChars = 100;
 
   return (
-    <div className="min-h-[850px] bg-white flex flex-col">
+    <div className="min-h-screen bg-white flex flex-col">
       <DashboardHeader />
 
-      <main className="flex-1 px-[25px] pb-[55px]">
-        <div className="w-full max-w-[343px] mx-auto pt-[25px]">
+      <main className="flex-1 px-[25px] pt-[60px] pb-[80px]">
+        <div className="w-full max-w-[343px] mx-auto">
           <div className="flex flex-col gap-[15px]">
             <div className="flex flex-col gap-[5px]">
-              <SectionTitle as="h1">이럴 때는 어떻게?</SectionTitle>
+              <SectionTitle as="h1">이런 말은 영어로 어떻게 말할까요?</SectionTitle>
             </div>
 
             {/* Input Card with Result */}
-            <div className="rounded-[15px] border border-[#DBDBDB] bg-white p-[20px_15px] flex flex-col gap-[10px]">
-              <p className="text-[#111] text-[16px] leading-[145%] min-h-[22px] w-full">
+            <Panel variant="yellow">
+              <p className="text-[#111] text-[16px] leading-[145%] min-h-[250px] w-full">
                 {korean}
               </p>
               <div className="text-[#888] text-[14px] leading-[145%] tracking-[-0.56px] text-right">
@@ -35,15 +35,15 @@ export default function ContentCreationResult() {
               </div>
               <Button
                 disabled
-                className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] text-white bg-[#CDCDCD] hover:bg-[#CDCDCD] disabled:bg-[#CDCDCD] disabled:opacity-100"
+                className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] text-white bg-[#C7C7C7] hover:bg-[#C7C7C7] disabled:bg-[#C7C7C7] disabled:opacity-100 cursor-not-allowed"
               >
                 나만의 문장 만들기
               </Button>
-            </div>
+            </Panel>
 
             {/* English Result Card */}
-            <Panel variant="blue" minHeightClass="min-h-[165px]">
-              <p className="text-[#000] text-[20px] leading-[140%]">
+            <Panel variant="blue" minHeightClass="min-h-[250px]">
+              <p className="text-[#000] text-[20px] font-bold leading-[140%]">
                 {english}
               </p>
             </Panel>
