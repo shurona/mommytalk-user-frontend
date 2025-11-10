@@ -31,7 +31,7 @@ export default function Mommytalk365Detail() {
       </div>
 
       {/* Content Card */}
-      <div className="w-full max-w-[343px] mx-auto rounded-[20px] bg-[#ECF5FF] p-[20px_15px] flex flex-col justify-center gap-[15px]">
+      <div className="w-full max-w-[343px] mx-auto rounded-[20px] bg-[#FFF2DD] p-[20px_15px] flex flex-col justify-center gap-[15px]">
         {/* Activity Content */}
         <div className="flex flex-col gap-[15px]">
           <div className="text-[#111] text-[16px] leading-[145%] font-['Noto_Sans']">

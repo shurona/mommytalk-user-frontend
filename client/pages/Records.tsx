@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BottomNav } from "@/components";
 import { Header as DashboardHeader } from "@/components/dashboard/Header";
+import { CustomSelect } from "@/components/ui/custom-select";
 import { useUserSentences } from "@/hooks/use-api";
 
 type TabType = "my-sentences" | "mommytalk-365";
@@ -74,7 +75,7 @@ export default function Records() {
             <span
               className={`text-[16px] leading-[145%] ${activeTab === "my-sentences" ? "font-bold text-[#111]" : "font-light text-[#888]"}`}
             >
-              내 문장
+              나만의 문장
             </span>
           </button>
           <button
@@ -93,29 +94,23 @@ export default function Records() {
 
         {/* 년도 및 월 선택 드롭다운 */}
         <div className="w-full max-w-[343px] flex gap-[10px]">
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="flex-1 px-[15px] py-[10px] rounded-[10px] border border-[#DBDBDB] bg-white text-[16px] text-[#111] focus:outline-none focus:border-[#111]"
-          >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}년
-              </option>
-            ))}
-          </select>
+          {/* 년도 선택 */}
+          <div className="flex-1">
+            <CustomSelect
+              value={selectedYear}
+              onChange={setSelectedYear}
+              options={years.map((year) => ({ value: year, label: `${year}년` }))}
+            />
+          </div>
 
-          <select
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="flex-1 px-[15px] py-[10px] rounded-[10px] border border-[#DBDBDB] bg-white text-[16px] text-[#111] focus:outline-none focus:border-[#111]"
-          >
-            {monthNames.map((name, index) => (
-              <option key={index + 1} value={index + 1}>
-                {name}
-              </option>
-            ))}
-          </select>
+          {/* 월 선택 */}
+          <div className="flex-1">
+            <CustomSelect
+              value={selectedMonth}
+              onChange={setSelectedMonth}
+              options={monthNames.map((name, index) => ({ value: index + 1, label: name }))}
+            />
+          </div>
         </div>
       </div>
 

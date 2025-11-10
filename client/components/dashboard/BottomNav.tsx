@@ -13,7 +13,7 @@ export function BottomNav() {
     <nav className="fixed bottom-0 left-0 right-0 h-[55px] bg-white flex items-start justify-center px-[84px] py-[8px] gap-[141px] border-t border-[#fff]">
       <button
         onClick={() => navigate("/dashboard")}
-        className="flex flex-col items-center gap-[5px] w-[28px]"
+        className="flex flex-col items-center gap-[5px]"
         aria-current={firstActive ? "page" : undefined}
       >
         <svg
@@ -31,17 +31,17 @@ export function BottomNav() {
         <span
           className={
             firstActive
-              ? "text-[#111] text-center text-[10px] font-medium"
-              : "text-[#888] text-center text-[10px] font-medium"
+              ? "text-[#111] text-center text-[10px] font-medium whitespace-nowrap"
+              : "text-[#888] text-center text-[10px] font-medium whitespace-nowrap"
           }
         >
-          내문장
+          나만의 문장 만들기
         </span>
       </button>
 
       <button
         onClick={() => navigate("/records")}
-        className="flex flex-col items-center gap-[5px] w-[19px]"
+        className="flex flex-col items-center gap-[5px]"
         aria-current={secondActive ? "page" : undefined}
       >
         <svg
@@ -59,11 +59,11 @@ export function BottomNav() {
         <span
           className={
             secondActive
-              ? "text-[#111] text-center text-[10px] font-medium"
-              : "text-[#888] text-center text-[10px] font-medium"
+              ? "text-[#111] text-center text-[10px] font-medium whitespace-nowrap"
+              : "text-[#888] text-center text-[10px] font-medium whitespace-nowrap"
           }
         >
-          기록
+          문장 모아보기
         </span>
       </button>
     </nav>
