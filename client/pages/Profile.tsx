@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/hooks/use-api";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 
 export default function Profile() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOnboarded, setIsOnboarded] = useState(true);
   const [childName, setChildName] = useState("");
   const [channelId, setChannelId] = useState<string>("");
   const { setChildName: saveChildName } = useOnboarding();
+
+  // Profile에 진입한 출처 저장 (dashboard 또는 records)
+  const fromPage = location.state?.from || '/dashboard';
 
   // localStorage에서 channelId 가져오기
   useEffect(() => {
@@ -136,7 +140,7 @@ export default function Profile() {
       <div className="w-full max-w-[343px] mx-auto flex flex-col gap-[25px] relative">
         {/* X 버튼 */}
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(fromPage)}
           className="absolute top-0 right-0 w-[24px] h-[24px] flex items-center justify-center focus:outline-none"
           aria-label="닫기"
         >

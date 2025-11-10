@@ -1,8 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export function Header() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleProfileClick = () => {
+    // 현재 페이지 경로를 state로 전달
+    navigate("/profile", { state: { from: location.pathname } });
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white px-[25px] pt-[5px] pb-[5px] flex items-center justify-center relative border-b border-[#f0f0f0]">
       <img
@@ -11,7 +18,7 @@ export function Header() {
         className="h-auto w-[60px] object-contain"
       />
       <button
-        onClick={() => navigate("/profile")}
+        onClick={handleProfileClick}
         className="absolute right-[25px] w-[25px] h-[25px] flex items-center justify-center"
         aria-label="More options"
       >
