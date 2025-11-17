@@ -205,6 +205,49 @@ export interface KakaoLoginResponse {
 }
 
 // ============================================
+// Mommytalk 365 Types
+// ============================================
+
+export interface Mommytalk365Message {
+  typeId: number;
+  typeTheme: string;
+  deliveryTime: string;  // yyyy-MM-dd 형식
+  messageContentId: number;
+  messageLogDetailId: number;
+}
+
+export interface Mommytalk365HistoryResponse {
+  success: boolean;
+  data: Mommytalk365Message[];
+}
+
+export interface Mommytalk365Detail {
+  id: number;
+  theme: string;
+  context: string;
+  deliveryDate: string;  // yyyy-MM-dd 형식
+  childLevel: number;
+  momLevel: number;
+  messageText: string;  // 마크다운 형식 텍스트
+  momAudioUrl: string;
+  momAudioText: string;
+  childAudioUrl: string;
+  childAudioText: string;
+  mommyVoca: string | null;
+  diaryUrl: string;
+  status: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Mommytalk365DetailResponse {
+  success: boolean;
+  data: Mommytalk365Detail;
+  message: string | null;
+  code: string | null;
+}
+
+// ============================================
 // Common API Response Types
 // ============================================
 

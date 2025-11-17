@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { onboardingApi, userApi, sentenceApi, recordApi, authApi } from '@/lib/api';
+import { onboardingApi, userApi, sentenceApi, recordApi, authApi, mommytalk365Api } from '@/lib/api';
 import type {
   OnboardingRequest,
   CreateSentenceRequest,
@@ -124,6 +124,28 @@ export const useUserSentences = (year: number, month: number) => {
     queryFn: () => sentenceApi.getUserSentences(year, month),
     staleTime: 2 * 60 * 1000, // 2 minutes
     enabled: month >= 1 && month <= 12, // Only fetch if valid month
+  });
+};
+
+// ============================================
+// Mommytalk 365 Hooks
+// ============================================
+
+export const useMommytalk365History = (channelId: number, year: number, month: number) => {
+  return useQuery({
+    queryKey: ['mommytalk365-history', channelId, year, month],
+    queryFn: () => mommytalk365Api.getMessageHistory(channelId, year, month),
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    enabled: !!channelId && month >= 1 && month <= 12, // Only fetch if channelId exists and valid month
+  });
+};
+
+export const useMommytalk365Detail = (channelId: number, messageLogDetailId: number) => {
+  return useQuery({
+    queryKey: ['mommytalk365-detail', channelId, messageLogDetailId],
+    queryFn: () => mommytalk365Api.getMessageDetail(channelId, messageLogDetailId),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    enabled: !!channelId && !!messageLogDetailId, // Only fetch if both IDs exist
   });
 };
 

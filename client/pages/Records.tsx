@@ -1,21 +1,104 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { BottomNav } from "@/components";
 import { Header as DashboardHeader } from "@/components/dashboard/Header";
 import { CustomSelect } from "@/components/ui/custom-select";
-import { useUserSentences } from "@/hooks/use-api";
+import { useUserSentences, useMommytalk365History } from "@/hooks/use-api";
 
 type TabType = "my-sentences" | "mommytalk-365";
 
 export default function Records() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<TabType>("my-sentences");
+  const location = useLocation();
   const currentDate = new Date();
-  const [selectedYear, setSelectedYear] = useState<number>(currentDate.getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState<number>(currentDate.getMonth() + 1); // 현재 월 (1-12)
+  const defaultState = {
+    activeTab: "my-sentences" as TabType,
+    year: currentDate.getFullYear(),
+    month: currentDate.getMonth() + 1,
+  };
+  const getStoredState = () => {
+    if (typeof window === "undefined") return defaultState;
+    try {
+      const stored = window.sessionStorage.getItem("records_page_state");
+      if (!stored) return defaultState;
+      const parsed = JSON.parse(stored) as {
+        activeTab?: TabType;
+        year?: number;
+        month?: number;
+      };
+      return {
+        activeTab: parsed.activeTab || defaultState.activeTab,
+        year: parsed.year || defaultState.year,
+        month: parsed.month || defaultState.month,
+      };
+    } catch (error) {
+      console.error("Failed to parse records page state:", error);
+      return defaultState;
+    }
+  };
+  const initialState = getStoredState();
+  const stateActiveTab = (location.state as { activeTab?: TabType })?.activeTab;
+  const [activeTab, setActiveTab] = useState<TabType>(
+    stateActiveTab || initialState.activeTab
+  );
+  const [selectedYear, setSelectedYear] = useState<number>(initialState.year);
+  const [selectedMonth, setSelectedMonth] = useState<number>(initialState.month); // 현재 월 (1-12)
+  const [channelId, setChannelId] = useState<number>(0);
+
+  // localStorage에서 channelId 가져오기
+  useEffect(() => {
+    const userInfoStr = localStorage.getItem('user_info');
+    if (userInfoStr) {
+      try {
+        const user = JSON.parse(userInfoStr);
+        if (user.channelId) {
+          setChannelId(Number(user.channelId));
+        }
+      } catch (error) {
+        console.error('Failed to parse user info:', error);
+      }
+    }
+  }, []);
+
+  // 현재 탭/년/월 상태를 sessionStorage에 저장해 뒤로 가기 시 복원
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const state = {
+      activeTab,
+      year: selectedYear,
+      month: selectedMonth,
+    };
+    window.sessionStorage.setItem("records_page_state", JSON.stringify(state));
+  }, [activeTab, selectedYear, selectedMonth]);
+
+  // 다른 페이지에서 state를 통해 탭을 지정한 경우 1회만 반영하고 state 제거
+  useEffect(() => {
+    if (!stateActiveTab) {
+      return;
+    }
+
+    if (stateActiveTab !== activeTab) {
+      setActiveTab(stateActiveTab);
+    }
+
+    const rawState = location.state as Record<string, unknown> | null;
+    if (!rawState) {
+      return;
+    }
+
+    const { activeTab: _ignored, ...restState } = rawState;
+    const hasRest = Object.keys(restState).length > 0;
+    navigate(`${location.pathname}${location.search}`, {
+      replace: true,
+      state: hasRest ? restState : null,
+    });
+  }, [stateActiveTab, activeTab, navigate, location.pathname, location.search, location.state]);
 
   // API로 내 문장 목록 가져오기
-  const { data: sentencesResponse, isLoading, isError } = useUserSentences(selectedYear, selectedMonth);
+  const { data: sentencesResponse, isLoading: sentencesLoading, isError: sentencesError } = useUserSentences(selectedYear, selectedMonth);
+
+  // API로 마미톡 365 히스토리 가져오기
+  const { data: mommytalk365Response, isLoading: mommytalk365Loading, isError: mommytalk365Error } = useMommytalk365History(channelId, selectedYear, selectedMonth);
 
   // 월 이름 배열 (1월~12월)
   const monthNames = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
@@ -23,25 +106,13 @@ export default function Records() {
   // 년도 배열 생성 (현재년도부터 과거 5년)
   const years = Array.from({ length: 6 }, (_, i) => currentDate.getFullYear() - i);
 
-  // 더미 데이터 (마미톡 365)
-  const mommytalk365Records = [
-    {
-      month: `${selectedMonth}월`,
-      items: [
-        { day: "1일", text: "목욕하며 실험하기 🛁" },
-        { day: "2일", text: "목욕하며 실험하기 🛁" },
-        { day: "3일", text: "목욕하며 실험하기 🛁" },
-      ],
-    },
-  ];
-
   // generateDate에서 일(day) 추출하는 함수
   const extractDay = (dateString: string): string => {
     const date = new Date(dateString);
     return `${date.getDate()}일`;
   };
 
-  // API 데이터를 UI 형식으로 변환
+  // API 데이터를 UI 형식으로 변환 - 내 문장
   const mySentencesRecords = sentencesResponse?.data.length
     ? [
         {
@@ -57,13 +128,33 @@ export default function Records() {
       ]
     : [];
 
+  // API 데이터를 UI 형식으로 변환 - 마미톡 365
+  const mommytalk365Records = mommytalk365Response?.data.length
+    ? [
+        {
+          month: `${selectedMonth}월`,
+          items: mommytalk365Response.data.map(item => ({
+            messageLogDetailId: item.messageLogDetailId,
+            messageContentId: item.messageContentId,
+            day: extractDay(item.deliveryTime),
+            text: item.typeTheme, // 메시지 주제
+            date: item.deliveryTime,
+          })),
+        },
+      ]
+    : [];
+
   const records =
     activeTab === "my-sentences" ? mySentencesRecords : mommytalk365Records;
+
+  // 현재 탭에 따른 로딩/에러 상태
+  const isLoading = activeTab === "my-sentences" ? sentencesLoading : mommytalk365Loading;
+  const isError = activeTab === "my-sentences" ? sentencesError : mommytalk365Error;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <DashboardHeader />
-      <div className="flex flex-col justify-start items-center pt-[110px] px-[25px] pb-[25px] gap-[15px]">
+      <div className="flex flex-col justify-start items-center pt-[70px] px-[25px] pb-[25px] gap-[15px]">
         {/* 탭 버튼 */}
         <div className="inline-flex items-center gap-[5px] h-[39px]">
           <button
@@ -138,7 +229,7 @@ export default function Records() {
           )}
 
           {/* 데이터 목록 */}
-          {!isLoading && !isError && records.map((monthGroup, idx) => (
+          {!isLoading && !isError && records.map((monthGroup: any, idx: number) => (
             <div key={idx} className="flex flex-col gap-[15px]">
               <div className="flex items-center gap-[7px]">
                 <span className="text-[#888] text-[18px] font-medium leading-[145%] tracking-[-0.72px]">
@@ -160,7 +251,11 @@ export default function Records() {
                           },
                         });
                       } else {
-                        navigate("/mommytalk365/1");
+                        navigate(`/mommytalk365/${item.messageLogDetailId}`, {
+                          state: {
+                            date: item.date,
+                          },
+                        });
                       }
                     }}
                     className="w-full p-[15px] flex flex-col justify-center gap-[15px] rounded-[20px] bg-[#F9F9FA] cursor-pointer hover:bg-[#F0F0F1] transition-colors"

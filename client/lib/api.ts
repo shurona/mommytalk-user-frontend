@@ -18,6 +18,8 @@ import type {
   GenerateSentenceRequest,
   GenerateSentenceResponse,
   UserSentenceListResponse,
+  Mommytalk365HistoryResponse,
+  Mommytalk365DetailResponse,
 } from '@/types/api';
 
 // ============================================
@@ -124,6 +126,31 @@ export const recordApi = {
   // Create a new record
   createRecord: async (sentenceId: string) => {
     const response = await apiClient.post('/records', { sentenceId });
+    return response.data;
+  },
+};
+
+// ============================================
+// Mommytalk 365 API
+// ============================================
+
+export const mommytalk365Api = {
+  // Get message history by year and month
+  getMessageHistory: async (channelId: number, year: number, month: number): Promise<Mommytalk365HistoryResponse> => {
+    const response = await apiClient.get<Mommytalk365HistoryResponse>(
+      `/v1/client/channels/${channelId}/messages/history`,
+      {
+        params: { year, month },
+      }
+    );
+    return response.data;
+  },
+
+  // Get message detail by messageLogDetailId
+  getMessageDetail: async (channelId: number, messageLogDetailId: number): Promise<Mommytalk365DetailResponse> => {
+    const response = await apiClient.get<Mommytalk365DetailResponse>(
+      `/v1/client/channels/${channelId}/messages/logs/${messageLogDetailId}`
+    );
     return response.data;
   },
 };
