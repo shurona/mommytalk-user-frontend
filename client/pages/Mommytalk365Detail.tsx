@@ -15,10 +15,6 @@ export default function Mommytalk365Detail() {
   const momAudioRef = useRef<HTMLAudioElement>(null);
   const childAudioRef = useRef<HTMLAudioElement>(null);
 
-  // Audio playing states
-  const [isMomAudioPlaying, setIsMomAudioPlaying] = useState(false);
-  const [isChildAudioPlaying, setIsChildAudioPlaying] = useState(false);
-
   // localStorage에서 channelId와 childName 가져오기
   useEffect(() => {
     const userInfoStr = localStorage.getItem('user_info');
@@ -68,107 +64,22 @@ export default function Mommytalk365Detail() {
     return parsed;
   };
 
-  // 오디오 재생/일시정지 토글
-  const toggleMomAudio = () => {
-    if (momAudioRef.current) {
-      if (isMomAudioPlaying) {
-        momAudioRef.current.pause();
-        setIsMomAudioPlaying(false);
-      } else {
-        momAudioRef.current.play().catch((error) => {
-          console.error('Mom audio play failed:', error);
-        });
-        setIsMomAudioPlaying(true);
-      }
-    }
+  // 오디오 단순 재생
+  const playMomAudio = () => {
+    if (!momAudioRef.current) return;
+    momAudioRef.current.currentTime = 0;
+    momAudioRef.current.play().catch((error) => {
+      console.error('Mom audio play failed:', error);
+    });
   };
 
-  const toggleChildAudio = () => {
-    if (childAudioRef.current) {
-      if (isChildAudioPlaying) {
-        childAudioRef.current.pause();
-        setIsChildAudioPlaying(false);
-      } else {
-        childAudioRef.current.play().catch((error) => {
-          console.error('Child audio play failed:', error);
-        });
-        setIsChildAudioPlaying(true);
-      }
-    }
+  const playChildAudio = () => {
+    if (!childAudioRef.current) return;
+    childAudioRef.current.currentTime = 0;
+    childAudioRef.current.play().catch((error) => {
+      console.error('Child audio play failed:', error);
+    });
   };
-
-  // 오디오 종료 및 재생 시간 업데이트 이벤트 핸들러
-  useEffect(() => {
-    const momAudio = momAudioRef.current;
-    const childAudio = childAudioRef.current;
-
-    const handleMomAudioEnded = () => {
-      setIsMomAudioPlaying(false);
-      if (momAudio) {
-        momAudio.currentTime = 0; // 재생 위치를 처음으로 되돌림
-      }
-    };
-
-    const handleChildAudioEnded = () => {
-      setIsChildAudioPlaying(false);
-      if (childAudio) {
-        childAudio.currentTime = 0; // 재생 위치를 처음으로 되돌림
-      }
-    };
-
-    // timeupdate로 재생 종료 감지
-    const handleMomTimeUpdate = () => {
-      if (momAudio && momAudio.duration > 0) {
-        // 재생 시간이 duration의 99% 이상이면 종료로 간주
-        if (momAudio.currentTime >= momAudio.duration - 0.1) {
-          handleMomAudioEnded();
-        }
-      }
-    };
-
-    const handleChildTimeUpdate = () => {
-      if (childAudio && childAudio.duration > 0) {
-        // 재생 시간이 duration의 99% 이상이면 종료로 간주
-        if (childAudio.currentTime >= childAudio.duration - 0.1) {
-          handleChildAudioEnded();
-        }
-      }
-    };
-
-    const handleMomAudioError = (e: Event) => {
-      console.error('Mom audio error:', e);
-      setIsMomAudioPlaying(false);
-    };
-
-    const handleChildAudioError = (e: Event) => {
-      console.error('Child audio error:', e);
-      setIsChildAudioPlaying(false);
-    };
-
-    if (momAudio) {
-      momAudio.addEventListener('ended', handleMomAudioEnded);
-      momAudio.addEventListener('timeupdate', handleMomTimeUpdate);
-      momAudio.addEventListener('error', handleMomAudioError);
-    }
-    if (childAudio) {
-      childAudio.addEventListener('ended', handleChildAudioEnded);
-      childAudio.addEventListener('timeupdate', handleChildTimeUpdate);
-      childAudio.addEventListener('error', handleChildAudioError);
-    }
-
-    return () => {
-      if (momAudio) {
-        momAudio.removeEventListener('ended', handleMomAudioEnded);
-        momAudio.removeEventListener('timeupdate', handleMomTimeUpdate);
-        momAudio.removeEventListener('error', handleMomAudioError);
-      }
-      if (childAudio) {
-        childAudio.removeEventListener('ended', handleChildAudioEnded);
-        childAudio.removeEventListener('timeupdate', handleChildTimeUpdate);
-        childAudio.removeEventListener('error', handleChildAudioError);
-      }
-    };
-  }, []);
 
   const displayDate = detail ? (location.state?.date || detail.deliveryDate) : undefined;
   const handleBack = () => navigate('/records', { state: { activeTab: 'mommytalk-365' } });
@@ -234,20 +145,13 @@ export default function Mommytalk365Detail() {
             <div className="flex items-center gap-[10px]">
               <span className="text-[#111] text-[16px] font-medium">엄마의 발음🔊</span>
               <button
-                onClick={toggleMomAudio}
+                onClick={playMomAudio}
                 className="w-[40px] h-[40px] flex items-center justify-center bg-white rounded-full shadow-sm"
-                aria-label={isMomAudioPlaying ? "일시정지" : "재생"}
+                aria-label="재생"
               >
-                {isMomAudioPlaying ? (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <rect x="6" y="4" width="4" height="16" fill="#111" />
-                    <rect x="14" y="4" width="4" height="16" fill="#111" />
-                  </svg>
-                ) : (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M8 5v14l11-7z" fill="#111" />
-                  </svg>
-                )}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M8 5v14l11-7z" fill="#111" />
+                </svg>
               </button>
               <button className="ml-auto">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -267,20 +171,13 @@ export default function Mommytalk365Detail() {
             <div className="flex items-center gap-[10px]">
               <span className="text-[#111] text-[16px] font-medium">아이의 발음🔊</span>
               <button
-                onClick={toggleChildAudio}
+                onClick={playChildAudio}
                 className="w-[40px] h-[40px] flex items-center justify-center bg-white rounded-full shadow-sm"
-                aria-label={isChildAudioPlaying ? "일시정지" : "재생"}
+                aria-label="재생"
               >
-                {isChildAudioPlaying ? (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <rect x="6" y="4" width="4" height="16" fill="#111" />
-                    <rect x="14" y="4" width="4" height="16" fill="#111" />
-                  </svg>
-                ) : (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M8 5v14l11-7z" fill="#111" />
-                  </svg>
-                )}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <path d="M8 5v14l11-7z" fill="#111" />
+                </svg>
               </button>
               <button className="ml-auto">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
