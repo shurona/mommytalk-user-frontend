@@ -26,12 +26,6 @@ export default function SentenceDetail() {
     english: english || "",
   };
 
-  // 데이터가 없으면 Records 페이지로 리다이렉트
-  if (!korean || !english || !date) {
-    navigate("/records", { state: { activeTab: "my-sentences" } });
-    return null;
-  }
-
   const handleBack = () => {
     navigate("/records", { state: { activeTab: "my-sentences" } });
   };
