@@ -153,17 +153,8 @@ export default function Mommytalk365Detail() {
                   <path d="M8 5v14l11-7z" fill="#111" />
                 </svg>
               </button>
-              <button className="ml-auto">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 6v6l4 2" stroke="#111" strokeWidth="2" strokeLinecap="round" />
-                  <circle cx="12" cy="12" r="10" stroke="#111" strokeWidth="2" />
-                </svg>
-              </button>
             </div>
             <audio ref={momAudioRef} src={detail.momAudioUrl} preload="metadata" />
-            <div className="w-full h-[6px] bg-[#E5E5E5] rounded-full overflow-hidden">
-              <div className="h-full bg-[#FF9B00] rounded-full" style={{ width: '50%' }} />
-            </div>
           </div>
 
           {/* Child Audio */}
@@ -179,17 +170,8 @@ export default function Mommytalk365Detail() {
                   <path d="M8 5v14l11-7z" fill="#111" />
                 </svg>
               </button>
-              <button className="ml-auto">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 6v6l4 2" stroke="#111" strokeWidth="2" strokeLinecap="round" />
-                  <circle cx="12" cy="12" r="10" stroke="#111" strokeWidth="2" />
-                </svg>
-              </button>
             </div>
             <audio ref={childAudioRef} src={detail.childAudioUrl} preload="metadata" />
-            <div className="w-full h-[6px] bg-[#E5E5E5] rounded-full overflow-hidden">
-              <div className="h-full bg-[#FF9B00] rounded-full" style={{ width: '50%' }} />
-            </div>
           </div>
 
           {/* Mommyvoca Card Button - 권한이 있을 때만 표시 */}
