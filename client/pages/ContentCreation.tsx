@@ -86,16 +86,26 @@ export default function ContentCreation() {
     <div className="min-h-screen bg-white flex flex-col">
       <DashboardHeader />
 
-      <main className="flex-1 px-[25px] pt-[60px] pb-[80px]">
+      <main className="flex-1 px-[25px] pt-[25px] pb-[80px]">
         <div className="w-full max-w-[343px] mx-auto">
-          <div className="flex flex-col gap-[15px]">
+          <div className="flex flex-col gap-[15px] pt-[15px]">
             {/* Title */}
-            <div className="flex flex-col gap-[5px]">
-              <SectionTitle as="h1">이런 말은 영어로 어떻게 말할까요?</SectionTitle>
+            <div className="flex flex-col gap-[10px]">
+              <div className="inline-flex items-center">
+                <span className="inline-flex px-[10px] py-[4px] rounded-full bg-[#FF9B00] text-white text-[12px] font-bold tracking-[-0.48px]">
+                  마미톡 AI
+                </span>
+              </div>
+              <div className="flex flex-col gap-[4px]">
+                <SectionTitle as="h1">이런 말은 영어로 어떻게 말할까요?</SectionTitle>
+                <span className="text-[#111] text-[16px] leading-[140%] font-normal">
+                  (1일 1회 사용이 가능합니다)
+                </span>
+              </div>
             </div>
 
             {/* Input Card */}
-            <Panel variant="yellow">
+            <Panel variant="yellow" minHeightClass="min-h-[240px]">
               <Textarea
                 value={sentenceText}
                 onChange={(e) => {
@@ -103,7 +113,7 @@ export default function ContentCreation() {
                   if (v.length <= maxChars) setSentenceText(v);
                 }}
                 placeholder="지금 손 씻으러가자"
-                className="w-full min-h-[250px] h-auto bg-transparent border-0 text-[#888] text-[16px] leading-[145%] resize-none placeholder:text-[#888] p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                className="w-full min-h-[160px] h-auto bg-transparent border-0 text-[#888] text-[16px] leading-[145%] resize-none placeholder:text-[#888] p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
               <div className="text-[#888] text-[14px] leading-[145%] tracking-[-0.56px] text-right">
                 {sentenceText.length} / {maxChars}
@@ -128,9 +138,6 @@ export default function ContentCreation() {
             <Panel variant="blue" minHeightClass="min-h-[250px]">
               <p className="text-[#888] text-[16px] leading-[140%]">
                 {childName ? childName : "아이"}에게 해주고 싶은 엄마표영어 표현을 마미톡AI로 만들어보세요! 궁금한 문장을 한글로 입력하시면 아이에게 말해주기 딱 좋은 문장으로 만들어드려요.
-                <br />
-                <br />
-                (1일 1회 사용이 가능합니다)
               </p>
             </Panel>
           </div>
