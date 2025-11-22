@@ -84,7 +84,7 @@ export default function Onboarding4() {
   ];
 
   return (
-    <div className="flex min-h-[812px] px-[25px] py-[25px] bg-background w-full justify-center">
+    <div className="flex min-h-[600px] px-[25px] py-[25px] bg-background w-full justify-center">
       <div className="w-full max-w-[393px] flex flex-col">
         <BackButton onClick={handleBack} />
 

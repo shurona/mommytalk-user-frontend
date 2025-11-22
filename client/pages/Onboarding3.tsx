@@ -53,7 +53,7 @@ export default function Onboarding3() {
   ];
 
   return (
-    <div className="flex min-h-[812px] justify-center px-[25px] py-[25px] sm:px-[15px] bg-background w-full">
+    <div className="flex min-h-[600px] justify-center px-[25px] py-[25px] sm:px-[15px] bg-background w-full">
       <div className="max-w-[393px] w-full flex flex-col">
         <BackButton onClick={handleBack} />
 
@@ -81,7 +81,7 @@ export default function Onboarding3() {
               </div>
             </div>
 
-            <div className="mt-[15px]">
+            <div className="mt-[25px]">
               <Button
                 onClick={handleNext}
                 disabled={!selectedLevel}

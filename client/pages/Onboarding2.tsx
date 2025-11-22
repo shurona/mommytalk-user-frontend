@@ -1,23 +1,25 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 
 export default function Onboarding2() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { childName: savedChildName, setChildName: saveChildName } = useOnboarding();
   const [childName, setChildName] = useState(savedChildName);
+  const fromProfile = location.state?.fromProfile === true;
 
   const handleNext = () => {
     if (childName.trim()) {
       saveChildName(childName.trim());
-      navigate("/onboarding3");
+      navigate("/onboarding3", { state: { fromProfile } });
     }
   };
 
   return (
     <div className="min-h-[812px] bg-background flex flex-row justify-center px-[25px] sm:px-4">
-      <div className="w-full max-w-[393px] flex flex-col items-center gap-[25px] py-[25px]">
+      <div className="w-full max-w-[393px] flex flex-col items-center py-[25px]">
         <div className="w-full sm:w-full flex flex-col gap-[55px]">
           <h1 className="text-xl sm:text-[22px] font-bold leading-[145%] text-foreground">
             아이를 어떻게 부를까요?
@@ -34,13 +36,15 @@ export default function Onboarding2() {
           </div>
         </div>
 
-        <Button
-          onClick={handleNext}
-          disabled={!childName.trim()}
-          className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          다음 1/3
-        </Button>
+        <div className="w-full mt-[25px]">
+          <Button
+            onClick={handleNext}
+            disabled={!childName.trim()}
+            className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            다음 1/3
+          </Button>
+        </div>
       </div>
     </div>
   );

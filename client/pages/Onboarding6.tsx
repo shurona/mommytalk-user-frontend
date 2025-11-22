@@ -24,11 +24,11 @@ export default function Onboarding6() {
   const levelImageUrl = `/assets/images/Level_${userLevel}_${childLevel}.png`;
 
   return (
-    <div className="min-h-screen bg-background flex justify-center px-[25px] py-[25px]">
-      <div className="w-full max-w-[393px] flex flex-col gap-[25px]">
+    <div className="min-h-screen bg-background flex justify-center px-[25px] py-[15px]">
+      <div className="w-full max-w-[393px] flex flex-col gap-[10px]">
         <BackButton onClick={handleBack} />
 
-        <div className="flex flex-col gap-[81px]">
+        <div className="flex flex-col gap-[60px]">
           <div className="flex flex-col gap-[35px]">
             <h1 className="text-[22px] font-bold leading-[145%] text-foreground">
               우리집 맞춤 레벨 설정이 끝났어요
