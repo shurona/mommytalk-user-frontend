@@ -154,7 +154,7 @@ export default function Records() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <DashboardHeader />
-      <div className="flex flex-col justify-start items-center pt-[70px] px-[25px] pb-[25px] gap-[15px]">
+      <div className="flex flex-col justify-start items-center pt-[25px] px-[25px] pb-[25px] gap-[15px]">
         {/* 탭 버튼 */}
         <div className="inline-flex items-center gap-[5px] h-[39px]">
           <button

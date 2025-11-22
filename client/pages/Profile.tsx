@@ -46,8 +46,8 @@ export default function Profile() {
   }, [userResponse]);
 
   // 로컬 레벨 이미지 경로
-  const userLevel = userResponse?.data?.userLevel || 1;
-  const childLevel = userResponse?.data?.childLevel || 1;
+  const userLevel = userResponse?.data?.userLevel || 2;
+  const childLevel = userResponse?.data?.childLevel || 2;
   const levelImageUrl = `/assets/images/Level_${userLevel}_${childLevel}.png`;
 
   // 로그아웃 처리
@@ -167,7 +167,7 @@ export default function Profile() {
             <Button
               onClick={() => {
                 saveChildName(childName);
-                navigate("/onboarding3", { state: { fromProfile: true } });
+                navigate("/onboarding2", { state: { fromProfile: true } });
               }}
               className="w-full h-[62px] rounded-[20px] text-[16px] tracking-[-0.64px]"
             >

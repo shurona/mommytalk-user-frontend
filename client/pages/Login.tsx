@@ -82,8 +82,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-center items-center px-[25px]">
-      <div className="w-full max-w-[343px] flex flex-col gap-[60px]">
+    <div className="min-h-screen bg-background flex flex-col justify-start items-center px-[25px] py-[100px]">
+      <div className="w-full max-w-[343px] flex flex-col gap-[50px]">
         {/* Logo & Title */}
         <div className="flex flex-col gap-[30px] items-center pt-[5px]">
           <img
