@@ -5,7 +5,10 @@ export function BottomNav() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const isRecords = pathname.startsWith("/records");
+  const isRecords =
+    pathname.startsWith("/records") ||
+    pathname.startsWith("/sentence") ||
+    pathname.startsWith("/mommytalk365");
   const firstActive = !isRecords; // "내문장" (dashboard) active when not on records
   const secondActive = isRecords; // "기록" active on records
 

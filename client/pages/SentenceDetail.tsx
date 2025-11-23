@@ -62,9 +62,6 @@ export default function SentenceDetail() {
         <div className="w-full max-w-[343px] flex flex-col gap-[15px]">
           {/* Title */}
           <div className="flex flex-col gap-[5px]">
-            <h2 className="text-[#111] text-[16px] font-bold leading-[140%]">
-              이럴 때는 어떻게?
-            </h2>
           </div>
 
           {/* Korean Input Card */}

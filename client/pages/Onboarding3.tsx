@@ -59,8 +59,9 @@ export default function Onboarding3() {
 
         {/* Main content */}
         <div className="flex flex-col flex-grow justify-between">
+          <div className="flex flex-col gap-[21px]">
             <div className="flex flex-col gap-[23px]">
-              <h1 className="text-[22px] font-bold leading-[145%] text-foreground">
+              <h1 className="text-xl sm:text-[22px] font-bold leading-[145%] text-foreground">
                 {childName}에게
                 <br />
                 어느 수준의 영어로 말해줄까요?
@@ -80,16 +81,15 @@ export default function Onboarding3() {
                 ))}
               </div>
             </div>
+          </div>
 
-            <div className="mt-[25px]">
-              <Button
-                onClick={handleNext}
-                disabled={!selectedLevel}
-                className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px]"
-              >
-                2/3
-              </Button>
-            </div>
+          <Button
+            onClick={handleNext}
+            disabled={!selectedLevel}
+            className="w-full h-[62px] rounded-[20px] font-bold text-[16px] leading-[145%] tracking-[-0.64px] mt-[15px]"
+          >
+            2/3
+          </Button>
         </div>
       </div>
     </div>

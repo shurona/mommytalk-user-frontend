@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/hooks/use-api";
 import { useOnboarding } from "@/contexts/OnboardingContext";
+import type { LanguageLevel, ResponseLevel } from "@/types/api";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -10,7 +11,38 @@ export default function Profile() {
   const [isOnboarded, setIsOnboarded] = useState(true);
   const [childName, setChildName] = useState("");
   const [channelId, setChannelId] = useState<string>("");
-  const { setChildName: saveChildName } = useOnboarding();
+  const {
+    setChildName: saveChildName,
+    setLanguageLevel,
+    setResponseLevel,
+    resetOnboarding,
+  } = useOnboarding();
+
+  const numberToLanguageLevel = (level?: number): LanguageLevel | null => {
+    switch (level) {
+      case 1:
+        return "basic";
+      case 2:
+        return "conversation";
+      case 3:
+        return "advanced";
+      default:
+        return null;
+    }
+  };
+
+  const numberToResponseLevel = (level?: number): ResponseLevel | null => {
+    switch (level) {
+      case 1:
+        return "listening-only";
+      case 2:
+        return "short-sentence";
+      case 3:
+        return "short-answer";
+      default:
+        return null;
+    }
+  };
 
   // Profile에 진입한 출처 저장 (dashboard 또는 records)
   const fromPage = location.state?.from || '/dashboard';
@@ -39,11 +71,23 @@ export default function Profile() {
       const user = userResponse.data;
       setIsOnboarded(user.onboardingCompleted || false);
       setChildName(user.childName || "");
+      if (user.onboardingCompleted) {
+        const mappedLanguage = numberToLanguageLevel(user.userLevel);
+        const mappedResponse = numberToResponseLevel(user.childLevel);
+        if (mappedLanguage) {
+          setLanguageLevel(mappedLanguage);
+        }
+        if (mappedResponse) {
+          setResponseLevel(mappedResponse);
+        }
+      } else {
+        resetOnboarding();
+      }
 
       // localStorage에도 최신 정보 저장
       localStorage.setItem('user_info', JSON.stringify(user));
     }
-  }, [userResponse]);
+  }, [userResponse, setLanguageLevel, setResponseLevel, resetOnboarding]);
 
   // 로컬 레벨 이미지 경로
   const userLevel = userResponse?.data?.userLevel || 2;
@@ -112,11 +156,11 @@ export default function Profile() {
           <div className="flex flex-col gap-[26px]">
             <div className="flex flex-col gap-[15px]">
               <label className="text-[#888] text-[16px] font-medium leading-[145%]">
-                로그인 이메일
+                로그인 전화번호
               </label>
               <div className="w-full h-[65px] px-[15px] py-[20px] flex items-center rounded-[20px] bg-[#F9F9FA]">
                 <span className="text-[#111] text-[16px] font-bold leading-[145%] tracking-[-0.64px]">
-                  jungukm@gmail.com
+                  {userResponse?.data?.phoneNumber || "전화번호 없음"}
                 </span>
               </div>
             </div>
@@ -190,11 +234,11 @@ export default function Profile() {
 
           <div className="flex flex-col gap-[15px]">
             <label className="text-[#888] text-[16px] font-medium leading-[145%]">
-              로그인 이메일
+              로그인 전화번호
             </label>
-            <div className="w-full h-[65px] px-[15px] py-[20px] flex items-center rounded-[20px] bg-[#F9F9FA]">
-              <span className="text-[#111] text-[16px] font-bold leading-[145%] tracking-[-0.64px]">
-                jungukm@gmail.com
+            <div className="w-full h-[65px] px-[15px] py/[20px] flex items-center rounded/[20px] bg-[#F9F9FA]">
+              <span className="text-[#111] text-[16px] font-bold leading/[145%] tracking-[-0.64px]">
+                {userResponse?.data?.phoneNumber || "전화번호 없음"}
               </span>
             </div>
           </div>

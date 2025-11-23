@@ -47,6 +47,7 @@ export interface LoginUser {
   channelId: number;
   name?: string;
   childName?: string;
+  phoneNumber?: string;
   userLevel?: number;
   childLevel?: number;
   onboardingCompleted: boolean;
@@ -60,6 +61,7 @@ export interface User {
   channelId: number;
   name?: string;
   childName?: string;
+  phoneNumber?: string;
   userLevel?: number;
   childLevel?: number;
   onboardingCompleted: boolean;
