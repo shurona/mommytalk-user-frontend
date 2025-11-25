@@ -215,7 +215,7 @@ export default function Mommytalk365Detail() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <DashboardHeader />
-      <div className="flex-1 w-full px-[25px] pt-[90px] pb-[70px] flex flex-col items-center">
+      <div className="flex-1 w-full px-[25px] pt-[15px] pb-[70px] flex flex-col items-center">
         <div className="w-full max-w-[343px] flex flex-col gap-[20px]">
           {content}
         </div>

@@ -86,7 +86,7 @@ export default function ContentCreation() {
     <div className="min-h-screen bg-white flex flex-col">
       <DashboardHeader />
 
-      <main className="flex-1 px-[25px] pt-[25px] pb-[80px]">
+      <main className="flex-1 px-[25px] pt-[15px] pb-[80px]">
         <div className="w-full max-w-[343px] mx-auto">
           <div className="flex flex-col gap-[15px] pt-[15px]">
             {/* Title */}
