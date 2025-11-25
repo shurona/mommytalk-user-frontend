@@ -33,7 +33,7 @@ export default function SentenceDetail() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <DashboardHeader />
-      <div className="flex-1 w-full px-[25px] pt-[90px] pb-[70px] flex flex-col items-center">
+      <div className="flex-1 w-full px-[25px] pt-[15px] pb-[70px] flex flex-col items-center">
         {/* Header with Back Button and Date (match Mommytalk365 layout) */}
         <div className="flex items-center justify-center relative w-full max-w-[343px] mb-[25px]">
           <button

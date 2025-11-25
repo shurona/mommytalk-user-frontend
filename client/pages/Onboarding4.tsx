@@ -70,17 +70,18 @@ export default function Onboarding4() {
       description: "어린 아이라면 듣기 중심으로 시작해요.",
     },
     {
-      id: "short-sentence" as ResponseLevel,
-      english: "레벨 2. Okay, I'm going! / I washed my hands!",
-      title: "짧은 문장",
-      description: "짧은 문장으로 표현해요.",
-    },
-    {
       id: "short-answer" as ResponseLevel,
-      english: "레벨 3. Okay, Mommy! / Wait, please!",
+      english: "레벨 2. Okay, Mommy! / Wait, please!",
       title: "짧은 대답",
       description: "한두 단어로 쉽게 따라 말해요.",
     },
+    {
+      id: "short-sentence" as ResponseLevel,
+      english: "레벨 3. Okay, I'm going! / I washed my hands!",
+      title: "짧은 문장",
+      description: "짧은 문장으로 표현해요.",
+    },
+    
   ];
 
   return (
